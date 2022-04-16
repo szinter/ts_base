@@ -1,12 +1,15 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    mode: "development",
+    mode: 'development',
     entry: {
-        index: {
-            import: './src/index.ts',
+        'webapp/index': {
+            import: './webapp/index.ts',
+        },
+        'server/app': {
+            import: './server/index.ts',
         }// add boundle splits here
     },
     module: {
@@ -24,19 +27,31 @@ module.exports = {
                 test: /\.less$/i,
                 use: [
                     {
-                        loader: "style-loader",
+                        loader: 'style-loader',
                     },
                     {
-                        loader: "css-loader",
+                        loader: 'css-loader',
                     },
                     {
-                        loader: "less-loader",
+                        loader: 'less-loader',
                     },
                 ],
             },
             {
-                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                test: /webapp\/.*\.(png|svg|jpg|jpeg|gif)$/i,
+                exclude: /webapp\/assets\/static\/*$/i,
                 type: 'asset/resource',
+                generator: {
+                    filename: 'webapp/assets/[hash][ext]',
+                },
+            },
+            {
+                test: /server\/.*\.(png|svg|jpg|jpeg|gif)$/i,
+                exclude: /webapp\/assets\/static\/*$/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'server/assets/[hash][ext]',
+                },
             },
         ],
     },
@@ -46,7 +61,18 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'TS base template',
-            template: 'src/index.html'
+            template: './webapp/index.html',
+            filename: 'webapp/index.html',
+            inject: false,
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: 'assets/static',
+                    to: 'webapp/assets/static',
+                    context: 'webapp/',
+                } 
+            ]
         }),
     ],
     output: {
@@ -60,7 +86,9 @@ module.exports = {
         },
     },
     devServer: {
-        contentBase: './dist',
+        static: {
+            directory: './dist/webapp',
+        }
     },
     devtool: 'inline-source-map',
 };
