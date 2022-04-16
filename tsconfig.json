@@ -15,7 +15,8 @@
         "**/*.test.ts"
     ],
     "include": [
-        "src",
+        "webapp",
+        "server",
         "assets.d.ts"
     ]
 }
