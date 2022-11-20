@@ -38,19 +38,11 @@ module.exports = {
                 ],
             },
             {
-                test: /webapp\/.*\.(png|svg|jpg|jpeg|gif)$/i,
+                test: /.*[\\,\/]webapp[\\,\/].*\.(png|svg|jpg|jpeg|gif)$/i,
                 exclude: /webapp\/assets\/static\/*$/i,
                 type: 'asset/resource',
                 generator: {
                     filename: 'webapp/assets/[hash][ext]',
-                },
-            },
-            {
-                test: /server\/.*\.(png|svg|jpg|jpeg|gif)$/i,
-                exclude: /webapp\/assets\/static\/*$/i,
-                type: 'asset/resource',
-                generator: {
-                    filename: 'server/assets/[hash][ext]',
                 },
             },
         ],
